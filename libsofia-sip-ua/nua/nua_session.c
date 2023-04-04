@@ -2753,6 +2753,11 @@ int process_timeout(nua_server_request_t *sr,
 
   assert(ss); assert(ss == nua_session_usage_for_dialog(nh->nh_ds));
 
+  //UC //added by liangjie for DS-84208,2020.5.26
+  if(nta_get_ignore_ack(irq) == 1){
+    return 0;
+  }
+  
   if (nua_server_request_is_pending(sr)) {
     phrase = "PRACK Timeout";
     reason = "SIP;cause=504;text=\"PRACK Timeout\"";

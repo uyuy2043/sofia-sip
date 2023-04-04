@@ -549,6 +549,14 @@ int nua_server_respond(nua_server_request_t *sr, tagi_t const *tags)
       SR_STATUS1(sr, SIP_500_INTERNAL_SERVER_ERROR);
   }
 
+  //UC //added by liangjie for DS-84208,2020.5.26
+  if (method == sip_method_invite) {
+    int ignore_ack = 0;
+    tl_gets(tags,NUTAG_IGNORE_ACK_REF(ignore_ack),TAG_END());
+    nta_set_ignore_ack(sr->sr_irq,ignore_ack);
+    SU_DEBUG_0(("sr set ignore_ack = %d\n", ignore_ack));
+  }
+
   if (nta_incoming_complete_response(sr->sr_irq, msg,
 				     sr->sr_status,
 				     sr->sr_phrase,

@@ -501,6 +501,9 @@ SOFIAPUBFUN void nta_msg_discard(nta_agent_t *agent, msg_t *msg);
 
 SOFIAPUBFUN int nta_is_internal_msg(msg_t const *msg);
 
+SOFIAPUBFUN int nta_set_ignore_ack(nta_incoming_t *sr_irq, unsigned enable);//UC
+SOFIAPUBFUN unsigned nta_get_ignore_ack(nta_incoming_t *sr_irq);//UC
+
 SOFIA_END_DECLS
 
 #endif

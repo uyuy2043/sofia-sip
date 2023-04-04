@@ -474,6 +474,7 @@ struct nta_incoming_s
   msg_t		       *irq_response;
 
   nta_reliable_t       *irq_reliable;       /**< List of reliable responses */
+  unsigned       	irq_ignore_ack;//UC
 };
 
 struct nta_reliable_s
@@ -12131,4 +12132,13 @@ int nta_agent_close_tports(nta_agent_t *agent)
   agent->sa_public_vias = NULL;
 
   return 0;
+}
+//UC
+SOFIAPUBFUN int nta_set_ignore_ack(nta_incoming_t *sr_irq, unsigned enable){
+    sr_irq->irq_ignore_ack = enable;
+    return 0;
+}
+//UC
+SOFIAPUBFUN unsigned nta_get_ignore_ack(nta_incoming_t *sr_irq){
+    return sr_irq->irq_ignore_ack;
 }

@@ -3038,3 +3038,6 @@ tag_typedef_t nutag_shutdown_events = BOOLTAG_TYPEDEF(shutdown_events);
 tag_typedef_t nutag_soa_session = PTRTAG_TYPEDEF(soa_session);
 tag_typedef_t nutag_hold = BOOLTAG_TYPEDEF(hold);
 tag_typedef_t nutag_address = STRTAG_TYPEDEF(address);
+
+//UC //added by liangjie for DS-84208,2020.5.26
+tag_typedef_t NUTAG_IGNORE_ACK = BOOLTAG_TYPEDEF(ignore_ack);
