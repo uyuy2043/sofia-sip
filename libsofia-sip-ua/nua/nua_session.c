@@ -1071,6 +1071,11 @@ static int nua_invite_client_report(nua_client_request_t *cr,
   }
   else if (status < 200) {
     next_state = nua_callstate_proceeding;
+    
+    ss->ss_100rel = NH_PGET(nh, early_media);
+    ss->ss_precondition = sip_has_feature(sip->sip_require, "precondition");
+    if (ss->ss_precondition)
+      ss->ss_update_needed = ss->ss_100rel = 1;
 
     if (sip && sip->sip_rseq &&
 	!SIP_IS_ALLOWED(NH_PGET(nh, appl_method), sip_method_prack)) {
