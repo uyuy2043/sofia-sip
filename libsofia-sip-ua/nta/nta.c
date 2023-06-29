@@ -8068,6 +8068,7 @@ nta_outgoing_t *outgoing_create(nta_agent_t *agent,
 
       resolved = tport_name_is_resolved(orq->orq_tpn);
       orq->orq_url = url_hdup(home, sip->sip_request->rq_url);
+	SU_DEBUG_1(("outgoing_create: orq_url %s\n", (const char *)orq->orq_url->url_params));
       if (route_url != (url_string_t *)agent->sa_default_proxy)
 	orq->orq_route = url_hdup(home, route_url->us_url);
     }
