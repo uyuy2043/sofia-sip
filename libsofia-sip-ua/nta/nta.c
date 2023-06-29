@@ -8224,10 +8224,10 @@ outgoing_prepare_send(nta_outgoing_t *orq)
 
   tp = tport_by_name(sa->sa_tports, tpn);
 
-  if(!tp && orq->orq_url && strcmp(orq->orq_url->url_params,"transport=ws") == 0) {
-	tpn->tpn_proto = "ws";
+  if(!tp && orq->orq_url && strncasecmp(orq->orq_url->url_params,"transport=ws",12) == 0) {
+	  tpn->tpn_proto = "ws";
   	tp = tport_by_name(sa->sa_tports, tpn);
-    	SU_DEBUG_3(("nta outgoing create: research ws transport\n" VA_NONE));
+    SU_DEBUG_3(("nta outgoing create: research ws transport\n" VA_NONE));
   }
 
   if (tpn->tpn_port[0] == '\0') {
