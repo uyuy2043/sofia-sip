@@ -564,7 +564,7 @@ issize_t sip_transport_d(char **ss, char const **ttransport)
       else if (su_casematch(transport, sip_transport_ws))
 	transport = sip_transport_ws;
       else if (su_casematch(transport, sip_transport_wss))
-	transport = sip_transport_wss;
+	transport = sip_transport_ws;//UC
       else if (su_casematch(transport, sip_transport_tls))
 	transport = sip_transport_tls;
     }
@@ -610,7 +610,7 @@ void sip_transport_dup(char **pp, char const **dd, char const *s)
   else if (s == sip_transport_ws)
     *dd = s;
   else if (s == sip_transport_wss)
-    *dd = s;
+    *dd = sip_transport_ws;//UC
   else if (su_casematch(s, sip_transport_udp))
     *dd = sip_transport_udp;
   else if (su_casematch(s, sip_transport_tcp))
@@ -622,7 +622,7 @@ void sip_transport_dup(char **pp, char const **dd, char const *s)
   else if (su_casematch(s, sip_transport_ws))
     *dd = sip_transport_ws;
   else if (su_casematch(s, sip_transport_wss))
-    *dd = sip_transport_wss;
+    *dd = sip_transport_ws;//UC
   else
     MSG_STRING_DUP(*pp, *dd, s);
 }

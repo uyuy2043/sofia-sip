@@ -2745,7 +2745,7 @@ nta_tpn_by_url(su_home_t *home,
 
   if (tpn->tpn_proto) {
 	  if (su_casematch(url->url_scheme, "sips") && su_casematch(tpn->tpn_proto, "ws")) {
-		  tpn->tpn_proto = "wss";
+		  tpn->tpn_proto = "ws";//UC
 	  }
     return 1;
   }
@@ -3225,7 +3225,7 @@ int agent_check_request_via(nta_agent_t *agent,
     tport_hostport(hostport, TPORT_HOSTPORTSIZE, from, 1);
     SU_DEBUG_1(("nta: Via check: invalid transport \"%s\" from %s\n",
 		v->v_protocol, hostport));
-    return -1;
+    //return -1;//UC
   }
 
   if (v->v_received) {
