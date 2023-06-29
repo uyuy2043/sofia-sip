@@ -2722,6 +2722,7 @@ nta_tpn_by_url(su_home_t *home,
   tpn->tpn_canon = url->url_host;
   tpn->tpn_host = url->url_host;
 
+  SU_DEBUG_7(("nta: selecting proto %s\n", url->url_params));
   if (url->url_params) {
     for (b = (char *)url->url_params; b[0]; b += n) {
       n = strcspn(b, ";");
@@ -2755,6 +2756,7 @@ nta_tpn_by_url(su_home_t *home,
   else
     tpn->tpn_proto = "*";
 
+  SU_DEBUG_7(("nta: selecting proto %s\n", tpn->tpn_proto));
   return 0;
 }
 
@@ -8054,6 +8056,8 @@ nta_outgoing_t *outgoing_create(nta_agent_t *agent,
     orq->orq_url = url_hdup(home, sip->sip_request->rq_url);
   }
   else if (route_url && !orq->orq_user_tport) {
+
+	SU_DEBUG_1(("outgoing_create: route %s\n", (const char *)route_url));
     invalid = nta_tpn_by_url(home, orq->orq_tpn, &scheme, &port, route_url);
     if (invalid >= 0) {
       explicit_transport = invalid > 0;
@@ -8069,6 +8073,7 @@ nta_outgoing_t *outgoing_create(nta_agent_t *agent,
     }
   }
   else {
+	SU_DEBUG_1(("outgoing_create: route %s\n", (const char *)sip->sip_request->rq_url));
     invalid = nta_tpn_by_url(home, orq->orq_tpn, &scheme, &port,
 			     (url_string_t *)sip->sip_request->rq_url);
     if (invalid >= 0) {
@@ -8213,8 +8218,16 @@ outgoing_prepare_send(nta_outgoing_t *orq)
 
   if (!tpn->tpn_port)
     tpn->tpn_port = "";
+  
+    SU_DEBUG_3(("nta outgoing create: (%s %s %s %s)transport\n" ,(const char *)tpn->tpn_port,(const char *)tpn->tpn_proto,(const char*)tpn->tpn_host,(const char *)tpn->tpn_ident));
 
   tp = tport_by_name(sa->sa_tports, tpn);
+
+  if(!tp && orq->orq_url && strcmp(orq->orq_url->url_params,"transport=ws") == 0) {
+	tpn->tpn_proto = "ws";
+  	tp = tport_by_name(sa->sa_tports, tpn);
+    	SU_DEBUG_3(("nta outgoing create: research ws transport\n" VA_NONE));
+  }
 
   if (tpn->tpn_port[0] == '\0') {
     if (orq->orq_sips || tport_has_tls(tp))
