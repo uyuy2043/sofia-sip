@@ -2745,7 +2745,7 @@ nta_tpn_by_url(su_home_t *home,
 
   if (tpn->tpn_proto) {
 	  if (su_casematch(url->url_scheme, "sips") && su_casematch(tpn->tpn_proto, "ws")) {
-		  tpn->tpn_proto = "ws";//UC
+		  tpn->tpn_proto = "wss";//UC
 	  }
     return 1;
   }
