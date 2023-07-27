@@ -484,6 +484,7 @@ int tport_ws_init_secondary(tport_t *self, int socket, int accepted,
   int one = 1;
   tport_ws_primary_t *wspri = (tport_ws_primary_t *)self->tp_pri;
   tport_ws_t *wstp = (tport_ws_t *)self;
+  su_sockaddr_t const *real_su = self->tp_real_addr;
 
   self->tp_has_connection = 1;
   self->tp_params->tpp_keepalive = 5000;
@@ -525,11 +526,11 @@ int tport_ws_init_secondary(tport_t *self, int socket, int accepted,
   self->tp_pre_framed = 1;
 
   if(wstp->ws.x_real_ip){
-    su_inet_pton(self->tp_real_addr->ai_family,wstp->ws.x_real_ip,SU_ADDR(self->tp_real_addr));
+    su_inet_pton(real_su->ai_family,wstp->ws.x_real_ip,SU_ADDR(real_su));
   }
 
   if(wstp->ws.x_real_port){
-    self->tp_real_addr->su_port = htons(strtoul(wstp->ws.x_real_port, NULL, 10));
+    real_su->su_port = htons(strtoul(wstp->ws.x_real_port, NULL, 10));
   }
   
   tport_set_secondary_timer(self);
