@@ -484,7 +484,7 @@ int tport_ws_init_secondary(tport_t *self, int socket, int accepted,
   int one = 1;
   tport_ws_primary_t *wspri = (tport_ws_primary_t *)self->tp_pri;
   tport_ws_t *wstp = (tport_ws_t *)self;
-  su_sockaddr_t const *real_su = self->tp_real_addr;
+  su_sockaddr_t *real_su = self->tp_real_addr;
 
   self->tp_has_connection = 1;
   self->tp_params->tpp_keepalive = 5000;
