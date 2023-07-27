@@ -526,7 +526,7 @@ int tport_ws_init_secondary(tport_t *self, int socket, int accepted,
   self->tp_pre_framed = 1;
 
   if(wstp->ws.x_real_ip){
-    su_inet_pton(real_su->ai_family,wstp->ws.x_real_ip,SU_ADDR(real_su));
+    su_inet_pton(real_su->su_family,wstp->ws.x_real_ip,SU_ADDR(real_su));
   }
 
   if(wstp->ws.x_real_port){
