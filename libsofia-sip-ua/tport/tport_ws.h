@@ -93,6 +93,7 @@ int tport_ws_init_secondary(tport_t *self, int socket, int accepted,
 int tport_ws_next_timer(tport_t *self, su_time_t *, char const **);
 void tport_ws_timer(tport_t *self, su_time_t);
 static void tport_ws_deinit_secondary(tport_t *self);
+void tport_ws_set_ip(tport_t *self);
 
 SOFIA_END_DECLS
 
