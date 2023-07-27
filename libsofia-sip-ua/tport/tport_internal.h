@@ -146,6 +146,7 @@ struct tport_s {
   unsigned            tp_accepted:1;    /**< Originally server? */
   unsigned            tp_conn_orient:1;	/**< Is connection-oriented */
   unsigned            tp_has_connection:1; /**< Has real connection */
+  unsigned            tp_has_ip:1; /**< Has real ip */
   unsigned            tp_reusable:1;    /**< Can this connection be reused */
   unsigned            tp_closed : 1;
   /**< This transport is closed.

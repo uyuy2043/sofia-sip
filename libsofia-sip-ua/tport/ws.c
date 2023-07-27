@@ -255,8 +255,8 @@ int ws_handshake(wsh_t *wsh)
 	char key[256] = "";
 	char version[5] = "";
 	char proto[256] = "";
-	char x_real_ip[256] = "";
-	char x_real_port[256] = "";
+	char x_real_ip[256] = "";//UC
+	char x_real_port[256] = "";//UC
 	char proto_buf[384] = "";
 	char input[512] = "";
 	unsigned char output[SHA1_HASH_SIZE] = "";
@@ -303,15 +303,15 @@ int ws_handshake(wsh_t *wsh)
 	cheezy_get_var(wsh->buffer, "Sec-WebSocket-Key", key, sizeof(key));
 	cheezy_get_var(wsh->buffer, "Sec-WebSocket-Version", version, sizeof(version));
 	cheezy_get_var(wsh->buffer, "Sec-WebSocket-Protocol", proto, sizeof(proto));
-	cheezy_get_var(wsh->buffer, "X-real-ip", x_real_ip, sizeof(x_real_ip));
-	cheezy_get_var(wsh->buffer, "X-real-port", x_real_port, sizeof(x_real_port));
+	cheezy_get_var(wsh->buffer, "X-real-ip", x_real_ip, sizeof(x_real_ip));//UC
+	cheezy_get_var(wsh->buffer, "X-real-port", x_real_port, sizeof(x_real_port));//UC
 
-	if (*x_real_ip) {
+	if (*x_real_ip) {//UC
 		wsh->x_real_ip = malloc(sizeof(x_real_ip));
 		memcpy(wsh->x_real_ip,x_real_ip,sizeof(x_real_ip));
 	}
 
-	if (*x_real_port) {
+	if (*x_real_port) {//UC
 		wsh->x_real_port = malloc(sizeof(x_real_port));
 		memcpy(wsh->x_real_port,x_real_port,sizeof(x_real_port));
 	}
@@ -819,12 +819,12 @@ ssize_t ws_close(wsh_t *wsh, int16_t reason)
 		wsh->uri = NULL;
 	}
 
-	if (wsh->x_real_ip) {
+	if (wsh->x_real_ip) {//UC
 		free(wsh->x_real_ip);
 		wsh->x_real_ip = NULL;
 	}
 
-	if (wsh->x_real_port) {
+	if (wsh->x_real_port) {//UC
 		free(wsh->x_real_port);
 		wsh->x_real_port = NULL;
 	}

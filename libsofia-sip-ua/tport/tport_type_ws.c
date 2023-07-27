@@ -241,7 +241,7 @@ int tport_recv_stream_ws(tport_t *self)
 
   msg_set_address(msg, self->tp_addr, self->tp_addrlen);
 
-  msg_set_real_address(msg, self->tp_real_addr, self->tp_real_addrlen);
+  msg_set_real_address(msg, self->tp_real_addr, self->tp_real_addrlen);//UC
 
   for (i = 0, n = 0; i < veclen; i++) {
     m = iovec[i].mv_len; assert(N >= n + m);
@@ -484,7 +484,7 @@ int tport_ws_init_secondary(tport_t *self, int socket, int accepted,
   int one = 1;
   tport_ws_primary_t *wspri = (tport_ws_primary_t *)self->tp_pri;
   tport_ws_t *wstp = (tport_ws_t *)self;
-  su_sockaddr_t *real_su = self->tp_real_addr;
+  su_sockaddr_t *real_su = self->tp_real_addr;//UC
 
   self->tp_has_connection = 1;
   self->tp_params->tpp_keepalive = 5000;
@@ -525,11 +525,16 @@ int tport_ws_init_secondary(tport_t *self, int socket, int accepted,
   wstp->ws_initialized = 1;
   self->tp_pre_framed = 1;
 
-  if(wstp->ws.x_real_ip){
+  if(wstp->ws.x_real_ip){//UC
+    SU_DEBUG_1(("ws_write_frame: real ip:%s\n", wstp->ws.x_real_ip));
     su_inet_pton(real_su->su_family,wstp->ws.x_real_ip,SU_ADDR(real_su));
+    self->tp_has_ip = 1;
+  } else {
+    self->tp_has_ip = 0;
   }
 
-  if(wstp->ws.x_real_port){
+  if(wstp->ws.x_real_port){//UC
+    SU_DEBUG_1(("ws_write_frame: real port:%s\n", wstp->ws.x_real_port));
     real_su->su_port = htons(strtoul(wstp->ws.x_real_port, NULL, 10));
   }
   
