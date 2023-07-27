@@ -2439,8 +2439,9 @@ int tport_setname(tport_t *self,
   if (ai->ai_addr) {
     assert(ai->ai_family), assert(ai->ai_socktype), assert(ai->ai_protocol);
     memcpy(self->tp_addr, ai->ai_addr, selfai->ai_addrlen = ai->ai_addrlen);
-    if(!self->tp_has_ip) {
-      memcpy(self->tp_real_addr, ai->ai_addr, self_rai->ai_addrlen = ai->ai_addrlen);//UC
+    memcpy(self->tp_real_addr, ai->ai_addr, self_rai->ai_addrlen = ai->ai_addrlen);//UC
+    if(!self->tp_has_ip && self->tp_pri->pri_vtable->vtp_set_ip) {
+        self->tp_pri->pri_vtable->vtp_set_ip(self);
     }
   }
 

@@ -394,6 +394,7 @@ struct tport_vtable
   int (*vtp_next_secondary_timer)(tport_t *self, su_time_t *,
 				  char const **return_why);
   void (*vtp_secondary_timer)(tport_t *self, su_time_t);
+  void (*vtp_set_ip)(tport_t const *self);
 };
 
 int tport_register_type(tport_vtable_t const *vtp);

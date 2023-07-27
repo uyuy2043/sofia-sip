@@ -104,6 +104,7 @@ tport_vtable_t const tport_ws_vtable =
   /* vtp_stun_response       */ NULL,
   /* vtp_next_secondary_timer*/ tport_ws_next_timer,
   /* vtp_secondary_timer     */ tport_ws_timer,
+  /* vtp_set_ip              */ tport_ws_set_ip,
 };
 
 tport_vtable_t const tport_ws_client_vtable =
@@ -129,6 +130,7 @@ tport_vtable_t const tport_ws_client_vtable =
   /* vtp_stun_response       */ NULL,
   /* vtp_next_secondary_timer*/ tport_ws_next_timer,
   /* vtp_secondary_timer     */ tport_ws_timer,
+  /* vtp_set_ip              */ tport_ws_set_ip,
 };
 
 tport_vtable_t const tport_wss_vtable =
@@ -154,6 +156,7 @@ tport_vtable_t const tport_wss_vtable =
   /* vtp_stun_response       */ NULL,
   /* vtp_next_secondary_timer*/ tport_ws_next_timer,
   /* vtp_secondary_timer     */ tport_ws_timer,
+  /* vtp_set_ip              */ tport_ws_set_ip,
 };
 
 tport_vtable_t const tport_wss_client_vtable =
@@ -179,6 +182,7 @@ tport_vtable_t const tport_wss_client_vtable =
   /* vtp_stun_response       */ NULL,
   /* vtp_next_secondary_timer*/ tport_ws_next_timer,
   /* vtp_secondary_timer     */ tport_ws_timer,
+  /* vtp_set_ip              */ tport_ws_set_ip,
 };
 
 
@@ -485,6 +489,7 @@ int tport_ws_init_secondary(tport_t *self, int socket, int accepted,
   tport_ws_primary_t *wspri = (tport_ws_primary_t *)self->tp_pri;
   tport_ws_t *wstp = (tport_ws_t *)self;
   su_sockaddr_t *real_su = self->tp_real_addr;//UC
+  su_addrinfo_t *rel_ai = self->tp_real_addrinfo;//UC
 
   self->tp_has_connection = 1;
   self->tp_params->tpp_keepalive = 5000;
@@ -526,18 +531,11 @@ int tport_ws_init_secondary(tport_t *self, int socket, int accepted,
   self->tp_pre_framed = 1;
 
   if(wstp->ws.x_real_ip){//UC
-    SU_DEBUG_1(("ws_write_frame: real ip:%s\n", wstp->ws.x_real_ip));
-    su_inet_pton(real_su->su_family,wstp->ws.x_real_ip,SU_ADDR(real_su));
     self->tp_has_ip = 1;
   } else {
     self->tp_has_ip = 0;
   }
 
-  if(wstp->ws.x_real_port){//UC
-    SU_DEBUG_1(("ws_write_frame: real port:%s\n", wstp->ws.x_real_port));
-    real_su->su_port = htons(strtoul(wstp->ws.x_real_port, NULL, 10));
-  }
-  
   tport_set_secondary_timer(self);
 
   return 0;
@@ -677,4 +675,22 @@ void tport_ws_timer(tport_t *self, su_time_t now)
     tport_keepalive_timer(self, now);
   }
   tport_base_timer(self, now);
+}
+
+//UC
+void tport_ws_set_ip(tport_t *self)
+{
+  tport_ws_t *wstp = (tport_ws_t *)self;
+  su_sockaddr_t *real_su = self->tp_real_addr;//UC
+
+  if(wstp->ws.x_real_ip){//UC
+    SU_DEBUG_1(("ws_write_frame: real ip:%s\n", wstp->ws.x_real_ip));
+    su_inet_pton(real_su->su_family,wstp->ws.x_real_ip,SU_ADDR(real_su));
+  }
+
+  if(wstp->ws.x_real_port){//UC
+    SU_DEBUG_1(("ws_write_frame: real port:%s\n", wstp->ws.x_real_port));
+    real_su->su_port = htons(strtoul(wstp->ws.x_real_port, NULL, 10));
+  }
+  
 }
