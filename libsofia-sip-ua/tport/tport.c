@@ -619,8 +619,10 @@ tport_primary_t *tport_alloc_primary(tport_master_t *mr,
     memcpy(tp->tp_params, mr->mr_params, sizeof (*tp->tp_params));
     tp->tp_reusable = mr->mr_master->tp_reusable;
 
-    if (!pri->pri_public)
+    if (!pri->pri_public){
       tp->tp_addrinfo->ai_addr = &tp->tp_addr->su_sa;
+      tp->tp_real_addrinfo->ai_addr = &tp->tp_real_addr->su_sa;
+    }
 
     SU_DEBUG_5(("%s(%p): new primary tport %p\n", __func__, (void *)mr,
 		(void *)pri));
@@ -876,6 +878,8 @@ tport_t *tport_alloc_secondary(tport_primary_t *pri,
     self->tp_magic = pri->pri_primary->tp_magic;
 
     self->tp_addrinfo->ai_addr = (void *)self->tp_addr;
+
+    self->tp_real_addrinfo->ai_addr = (void *)self->tp_real_addr;
 
     self->tp_socket = socket;
 
@@ -2408,6 +2412,7 @@ int tport_setname(tport_t *self,
 		  char const *canon)
 {
   su_addrinfo_t *selfai = self->tp_addrinfo;
+  su_addrinfo_t *self_rai = self->tp_real_addrinfo;
 
   if (tport_convert_addr(self->tp_home, self->tp_name,
 			 protoname, canon,
@@ -2424,9 +2429,17 @@ int tport_setname(tport_t *self,
   selfai->ai_protocol = ai->ai_protocol;
   selfai->ai_canonname = (char *)self->tp_name->tpn_canon;
 
+  self_rai->ai_flags = ai->ai_flags & TP_AI_MASK;
+
+  self_rai->ai_family = ai->ai_family;
+  self_rai->ai_socktype = ai->ai_socktype;
+  self_rai->ai_protocol = ai->ai_protocol;
+  self_rai->ai_canonname = (char *)self->tp_name->tpn_canon;
+  
   if (ai->ai_addr) {
     assert(ai->ai_family), assert(ai->ai_socktype), assert(ai->ai_protocol);
     memcpy(self->tp_addr, ai->ai_addr, selfai->ai_addrlen = ai->ai_addrlen);
+    memcpy(self->tp_real_addr, ai->ai_addr, self_rai->ai_addrlen = ai->ai_addrlen);
   }
 
   return 0;

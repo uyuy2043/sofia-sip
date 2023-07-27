@@ -101,6 +101,8 @@ struct msg_s {
   su_sockaddr_t	 m_addr[1];	/**< Message address */
 
   int          	 m_errno;	/**< Errno */
+  su_addrinfo_t	 m_real_addrinfo;	/**< Message real addressing info (protocol) */
+  su_sockaddr_t	 m_real_addr[1];	/**< Message address */
 };
 
 /** Buffer for message body. */

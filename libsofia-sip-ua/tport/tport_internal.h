@@ -207,6 +207,10 @@ struct tport_s {
   su_sockaddr_t       tp_addr[1];	/**< Peer/own address */
 #define tp_addrlen tp_addrinfo->ai_addrlen
 
+  su_addrinfo_t       tp_real_addrinfo[1];   /**< Peer/own address info */
+  su_sockaddr_t       tp_real_addr[1];	/**< Peer/own address */
+#define tp_real_addrlen tp_real_addrinfo->ai_addrlen
+
   /* ==== Receive queue ================================================== */
 
   msg_t   	     *tp_msg;		/**< Message being received */

@@ -119,6 +119,8 @@ typedef struct wsh_s {
 	size_t write_buffer_len;
 
 	ssize_t payload_size_max;
+	char *x_real_ip;
+	char *x_real_port;
 } wsh_t;
 
 ssize_t ws_send_buf(wsh_t *wsh, ws_opcode_t oc);

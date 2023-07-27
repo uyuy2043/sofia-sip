@@ -71,6 +71,10 @@ msg_t *msg_create(msg_mclass_t const *mc, int flags)
     msg->m_tail = &msg->m_chain;
     msg->m_addrinfo.ai_addrlen = sizeof(msg->m_addr);
     msg->m_addrinfo.ai_addr = &msg->m_addr->su_sa;
+
+    msg->m_real_addrinfo.ai_addrlen = sizeof(msg->m_real_addr);
+    msg->m_real_addrinfo.ai_addr = &msg->m_real_addr->su_sa;
+    
     msg->m_maxsize = 0;
 
     flags &= MSG_FLG_USERMASK;
@@ -312,6 +316,18 @@ int msg_set_address(msg_t *msg, su_sockaddr_t const *su, socklen_t sulen)
   return -1;
 }
 
+int msg_set_real_address(msg_t *msg, su_sockaddr_t const *su, socklen_t sulen)
+{
+  if (sulen < (sizeof msg->m_real_addr) && msg && su) {
+    memcpy(msg->m_real_addr, su, msg->m_real_addrinfo.ai_addrlen = sulen);
+    msg->m_real_addrinfo.ai_family = su->su_family;
+    return 0;
+  }
+  if (msg)
+    msg->m_errno = EFAULT;
+  return -1;
+}
+
 /** Get addrinfo structure.
  *
  * @relatesalso msg_s
@@ -328,6 +344,11 @@ int msg_set_address(msg_t *msg, su_sockaddr_t const *su, socklen_t sulen)
 su_addrinfo_t *msg_addrinfo(msg_t *msg)
 {
   return msg ? &msg->m_addrinfo : 0;
+}
+
+su_addrinfo_t *msg_real_addrinfo(msg_t *msg)
+{
+  return msg ? &msg->m_real_addrinfo : 0;
 }
 
 /**Copy message address.

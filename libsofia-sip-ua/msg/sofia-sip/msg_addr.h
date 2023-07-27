@@ -57,6 +57,9 @@ SOFIAPUBFUN void msg_addr_copy(msg_t *dst, msg_t const *src);
 SOFIAPUBFUN int msg_errno(msg_t const *msg);
 SOFIAPUBFUN void msg_set_errno(msg_t *msg, int err);
 
+SOFIAPUBFUN su_addrinfo_t *msg_real_addrinfo(msg_t *msg);
+SOFIAPUBFUN int msg_set_real_address(msg_t *msg, su_sockaddr_t const *, socklen_t);
+
 enum {
   /** Minimum size of a message buffer */
   msg_min_size = 512,
