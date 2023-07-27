@@ -524,12 +524,12 @@ int tport_ws_init_secondary(tport_t *self, int socket, int accepted,
   wstp->ws_initialized = 1;
   self->tp_pre_framed = 1;
 
-  if(wstp->ws->x_real_ip){
-    su_inet_pton(self->tp_real_addrinfo.ai_family,wstp->ws->x_real_ip,SU_ADDR(self->tp_real_addr));
+  if(wstp->ws.x_real_ip){
+    su_inet_pton(self->tp_real_addrinfo.ai_family,wstp->ws.x_real_ip,SU_ADDR(self->tp_real_addr));
   }
 
-  if(wstp->ws->x_real_port){
-    self->tp_real_addr->su_port = htons(strtoul(wstp->ws->x_real_port, NULL, 10));
+  if(wstp->ws.x_real_port){
+    self->tp_real_addr->su_port = htons(strtoul(wstp->ws.x_real_port, NULL, 10));
   }
   
   tport_set_secondary_timer(self);
