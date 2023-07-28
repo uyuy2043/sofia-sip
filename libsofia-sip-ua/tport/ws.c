@@ -303,8 +303,8 @@ int ws_handshake(wsh_t *wsh)
 	cheezy_get_var(wsh->buffer, "Sec-WebSocket-Key", key, sizeof(key));
 	cheezy_get_var(wsh->buffer, "Sec-WebSocket-Version", version, sizeof(version));
 	cheezy_get_var(wsh->buffer, "Sec-WebSocket-Protocol", proto, sizeof(proto));
-	cheezy_get_var(wsh->buffer, "X-real-ip", x_real_ip, sizeof(x_real_ip));//UC
-	cheezy_get_var(wsh->buffer, "X-real-port", x_real_port, sizeof(x_real_port));//UC
+	cheezy_get_var(wsh->buffer, "X-Real-IP", x_real_ip, sizeof(x_real_ip));//UC
+	cheezy_get_var(wsh->buffer, "X-Real-Port", x_real_port, sizeof(x_real_port));//UC
 
 	if (*x_real_ip) {//UC
 		wsh->x_real_ip = malloc(sizeof(x_real_ip));
