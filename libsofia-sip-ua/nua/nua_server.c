@@ -92,7 +92,6 @@ int nua_stack_process_request(nua_handle_t *nh,
   char const *name = sip->sip_request->rq_method_name;
   nua_server_methods_t const *sm;
   nua_server_request_t *sr, sr0[1];
-  nua_session_usage_t *ss;
   int status, initial = 1;
   int create_dialog;
 
@@ -241,8 +240,8 @@ int nua_stack_process_request(nua_handle_t *nh,
       SR_STATUS1(sr, SIP_202_ACCEPTED);
     else if (method == sip_method_update)
     {
-      ss = nua_dialog_usage_private(sr->sr_usage);
-      if(ss && ss->ss_precondition){
+      
+      if(sr->sr_100rel){
         //SR_STATUS1(sr, SIP_200_OK);
         SU_DEBUG_0(("update app level, sr_status=%u", sr->sr_status));
       } else {
