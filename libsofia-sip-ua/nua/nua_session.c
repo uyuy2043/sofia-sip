@@ -3499,6 +3499,9 @@ int nua_update_server_init(nua_server_request_t *sr);
 int nua_update_server_respond(nua_server_request_t *sr, tagi_t const *tags);
 int nua_update_server_report(nua_server_request_t *, tagi_t const *);
 
+int nua_update_server_report_build(nua_server_request_t *, tagi_t const *);
+int nua_update_server_report_tag(nua_server_request_t *sr, tag_type_t tag, tag_value_t value, ...);
+
 nua_server_methods_t const nua_update_server_methods =
   {
     SIP_METHOD_UPDATE,
@@ -3642,6 +3645,71 @@ int nua_update_server_respond(nua_server_request_t *sr, tagi_t const *tags)
   return nua_base_server_respond(sr, tags);
 }
 
+
+
+int nua_update_server_report_tag(nua_server_request_t *sr, tag_type_t tag, tag_value_t value, ...)
+{
+    int retval;
+    ta_list ta;
+    ta_start(ta, tag, value);
+    retval =  nua_base_server_report(sr, ta_tags(ta));
+    ta_end(ta);
+    return retval;
+}
+
+int nua_update_server_report_build(nua_server_request_t *sr, tagi_t const *tags)
+{
+  enum nua_callstate ss_state = nua_callstate_init;
+  char const *oa_recv = NULL;
+  char const *oa_sent = NULL;
+
+  int offer_recv = 0, answer_recv = 0, offer_sent = 0, answer_sent = 0;
+
+  if (ss) {
+    
+    ss_state = ss->ss_state;
+    oa_recv = ss->ss_oa_recv, ss->ss_oa_recv = NULL;
+    oa_sent = ss->ss_oa_sent, ss->ss_oa_sent = NULL;
+
+    assert(oa_sent == Offer || oa_sent == Answer || oa_sent == NULL);
+    assert(oa_recv == Offer || oa_recv == Answer || oa_recv == NULL);
+
+    if (oa_recv) {
+      offer_recv = oa_recv == Offer;
+      answer_recv = oa_recv == Answer;
+    }
+
+    if (oa_sent) {
+      offer_sent = oa_sent == Offer;
+      answer_sent = oa_sent == Answer;
+    }
+  }
+
+  {
+    sdp_session_t const *remote_sdp = NULL;
+    char const *remote_sdp_str = NULL;
+
+
+    if (nh->nh_soa) {
+      if (oa_recv)
+	      soa_get_remote_sdp(nh->nh_soa, &remote_sdp, &remote_sdp_str, 0);
+    }
+    else
+      oa_recv = NULL, oa_sent = NULL;
+
+    return nua_update_server_report_tag(sr,
+		     NH_ACTIVE_MEDIA_TAGS(1, nh->nh_soa),
+		     /* NUTAG_SOA_SESSION(nh->nh_soa), */
+		     TAG_IF(offer_recv, NUTAG_OFFER_RECV(offer_recv)),
+		     TAG_IF(answer_recv, NUTAG_ANSWER_RECV(answer_recv)),
+		     TAG_IF(offer_sent, NUTAG_OFFER_SENT(offer_sent)),
+		     TAG_IF(answer_sent, NUTAG_ANSWER_SENT(answer_sent)),
+		     TAG_IF(oa_recv, SOATAG_REMOTE_SDP(remote_sdp)),
+		     TAG_IF(oa_recv, SOATAG_REMOTE_SDP_STR(remote_sdp_str)),
+		     TAG_END());
+  }
+}
+
 /** @NUA_EVENT nua_i_update
  *
  * @brief Incoming session UPDATE request.
@@ -3667,7 +3735,9 @@ int nua_update_server_report(nua_server_request_t *sr, tagi_t const *tags)
   int offer_recv_or_answer_sent = sr->sr_offer_recv || sr->sr_answer_sent;
   int retval;
 
-  retval = nua_base_server_report(sr, tags), sr = NULL; /* destroys sr */
+
+  retval = nua_update_server_report_build(sr,tags), sr = NULL; /* destroys sr */
+
 
   if (retval >= 2 || ss == NULL) {
 #if 0

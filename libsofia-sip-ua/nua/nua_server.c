@@ -98,6 +98,7 @@ int nua_stack_process_request(nua_handle_t *nh,
   char const *user_agent = NH_PGET(nh, user_agent);
   sip_supported_t const *supported = NH_PGET(nh, supported);
   sip_allow_t const *allow = NH_PGET(nh, allow);
+  nua_session_usage_t *ss = nua_dialog_usage_private(sr->sr_usage);
 
   enter;
 
@@ -238,6 +239,16 @@ int nua_stack_process_request(nua_handle_t *nh,
       !sip_is_allowed(NH_PGET(sr->sr_owner, appl_method), method, name)) {
     if (method == sip_method_refer || method == sip_method_subscribe)
       SR_STATUS1(sr, SIP_202_ACCEPTED);
+    else if (method == sip_method_update)
+    {
+      if(ss && ss->ss_precondition){
+        //SR_STATUS1(sr, SIP_200_OK);
+        SU_DEBUG_0(("update app level, sr_status=%u", sr->sr_status));
+      } else {
+        SR_STATUS1(sr, SIP_200_OK);
+        SU_DEBUG_0(("update soa level, sr_status=%u", sr->sr_status));
+      }
+    }
     else
       SR_STATUS1(sr, SIP_200_OK);
   }
