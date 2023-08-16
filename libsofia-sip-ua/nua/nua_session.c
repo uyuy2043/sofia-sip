@@ -3653,7 +3653,7 @@ int nua_update_server_report_tag(nua_server_request_t *sr, tag_type_t tag, tag_v
     int retval;
     ta_list ta;
     ta_start(ta, tag, value);
-    retval =  nua_base_server_report(sr, ta_tags(ta));
+    retval =  nua_base_server_report(sr, ta_args(ta));
     ta_end(ta);
     return retval;
 }
