@@ -3663,7 +3663,7 @@ int nua_update_server_report_build(nua_server_request_t *sr, tagi_t const *tags)
   nua_handle_t *nh = sr->sr_owner;
   nua_dialog_usage_t *du = sr->sr_usage;
   nua_session_usage_t *ss = nua_dialog_usage_private(du);
-  enum nua_callstate ss_state = nua_callstate_init;
+  //enum nua_callstate ss_state = nua_callstate_init;
   char const *oa_recv = NULL;
   char const *oa_sent = NULL;
 
@@ -3671,7 +3671,7 @@ int nua_update_server_report_build(nua_server_request_t *sr, tagi_t const *tags)
 
   if (ss) {
     
-    ss_state = ss->ss_state;
+    //ss_state = ss->ss_state;
     oa_recv = ss->ss_oa_recv, ss->ss_oa_recv = NULL;
     oa_sent = ss->ss_oa_sent, ss->ss_oa_sent = NULL;
 
