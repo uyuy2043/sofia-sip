@@ -3577,6 +3577,11 @@ int nua_update_server_init(nua_server_request_t *sr)
 	sr->sr_status = soa_error_as_sip_response(nh->nh_soa, &sr->sr_phrase);
     }
 
+    SU_DEBUG_0(("100rel=%d precondition=%d\n",ss->ss_100rel,ss->ss_precondition));
+    if(ss->ss_precondition || ss->ss_100rel) {
+      sr->sr_100rel=1;
+    }
+
     sr->sr_offer_recv = 1;
     ss ? ss->ss_oa_recv = Offer : Offer;
   }
