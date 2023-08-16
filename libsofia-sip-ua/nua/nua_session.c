@@ -44,6 +44,7 @@
 #include <sofia-sip/sip_status.h>
 #include <sofia-sip/sip_util.h>
 #include <sofia-sip/su_uniqueid.h>
+#include <sofia-sip/su_tagarg.h>
 #include <sofia-sip/msg_mime_protos.h>
 
 #define NTA_INCOMING_MAGIC_T struct nua_server_request
@@ -3659,6 +3660,9 @@ int nua_update_server_report_tag(nua_server_request_t *sr, tag_type_t tag, tag_v
 
 int nua_update_server_report_build(nua_server_request_t *sr, tagi_t const *tags)
 {
+  nua_handle_t *nh = sr->sr_owner;
+  nua_dialog_usage_t *du = sr->sr_usage;
+  nua_session_usage_t *ss = nua_dialog_usage_private(du);
   enum nua_callstate ss_state = nua_callstate_init;
   char const *oa_recv = NULL;
   char const *oa_sent = NULL;
