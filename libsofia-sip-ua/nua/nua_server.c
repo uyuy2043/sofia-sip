@@ -240,8 +240,7 @@ int nua_stack_process_request(nua_handle_t *nh,
       SR_STATUS1(sr, SIP_202_ACCEPTED);
     else if (method == sip_method_update)
     {
-      
-      if(sr->sr_100rel){
+      if(sr->sr_appl){
         //SR_STATUS1(sr, SIP_200_OK);
         SU_DEBUG_0(("update app level, sr_status=%u", sr->sr_status));
       } else {

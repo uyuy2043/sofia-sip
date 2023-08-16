@@ -109,6 +109,8 @@ struct nua_server_request {
   /* Flags used with 100rel */
   unsigned sr_100rel:1, sr_pracked:1;
 
+  unsigned sr_appl:1;
+
   /* Flags used with offer-answer */
   unsigned sr_offer_recv:1;	/**< We have received an offer */
   unsigned sr_answer_sent:2;	/**< We have answered (reliably, if >1) */
