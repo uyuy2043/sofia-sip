@@ -3578,7 +3578,12 @@ int nua_update_server_init(nua_server_request_t *sr)
     }
 
     SU_DEBUG_0(("100rel=%d precondition=%d\n",ss->ss_100rel,ss->ss_precondition));
-    if(ss->ss_precondition || ss->ss_100rel) {
+
+    if(sip_has_feature(request->sip_supported, "precondition") || 
+      sip_has_feature(request->sip_require, "precondition")) {
+      sr->sr_appl = 1;
+    }
+    else if(ss->ss_precondition || ss->ss_100rel) {
       sr->sr_appl = 1;
     }
 
